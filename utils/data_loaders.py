@@ -6,7 +6,6 @@ import cv2
 import json
 import numpy as np
 import os
-import random
 import scipy.io
 import scipy.ndimage
 import sys
@@ -16,6 +15,7 @@ from datetime import datetime as dt
 from enum import Enum, unique
 
 import utils.binvox_rw
+import secrets
 
 
 @unique
@@ -60,7 +60,7 @@ class ShapeNetDataset(torch.utils.data.dataset.Dataset):
         if self.dataset_type == DatasetType.TRAIN:
             selected_rendering_image_paths = [
                 rendering_image_paths[i]
-                for i in random.sample(range(len(rendering_image_paths)), self.n_views_rendering)
+                for i in secrets.SystemRandom().sample(range(len(rendering_image_paths)), self.n_views_rendering)
             ]
         else:
             selected_rendering_image_paths = [rendering_image_paths[i] for i in range(self.n_views_rendering)]

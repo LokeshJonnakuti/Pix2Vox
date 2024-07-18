@@ -3,7 +3,6 @@
 # Developed by Haozhe Xie <cshzxie@gmail.com>
 
 import os
-import random
 import torch
 import torch.backends.cudnn
 import torch.utils.data
@@ -22,6 +21,7 @@ from models.encoder import Encoder
 from models.decoder import Decoder
 from models.refiner import Refiner
 from models.merger import Merger
+import secrets
 
 
 def train_net(cfg):
@@ -255,7 +255,7 @@ def train_net(cfg):
 
         # Update Rendering Views
         if cfg.TRAIN.UPDATE_N_VIEWS_RENDERING:
-            n_views_rendering = random.randint(1, cfg.CONST.N_VIEWS_RENDERING)
+            n_views_rendering = secrets.SystemRandom().randint(1, cfg.CONST.N_VIEWS_RENDERING)
             train_data_loader.dataset.set_n_views_rendering(n_views_rendering)
             print('[INFO] %s Epoch [%d/%d] Update #RenderingViews to %d' %
                   (dt.now(), epoch_idx + 2, cfg.TRAIN.NUM_EPOCHES, n_views_rendering))

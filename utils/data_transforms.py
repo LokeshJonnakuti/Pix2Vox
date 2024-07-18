@@ -9,8 +9,8 @@ import cv2
 # import matplotlib.patches as patches
 import numpy as np
 import os
-import random
 import torch
+import secrets
 
 
 class Compose(object):
@@ -200,12 +200,12 @@ class RandomCrop(object):
 
                 # Make the crop area as a square
                 square_object_size = max(bbox_width, bbox_height)
-                square_object_size = square_object_size * random.uniform(0.8, 1.2)
+                square_object_size = square_object_size * secrets.SystemRandom().uniform(0.8, 1.2)
 
-                x_left = int(bbox_x_mid - square_object_size * random.uniform(.4, .6))
-                x_right = int(bbox_x_mid + square_object_size * random.uniform(.4, .6))
-                y_top = int(bbox_y_mid - square_object_size * random.uniform(.4, .6))
-                y_bottom = int(bbox_y_mid + square_object_size * random.uniform(.4, .6))
+                x_left = int(bbox_x_mid - square_object_size * secrets.SystemRandom().uniform(.4, .6))
+                x_right = int(bbox_x_mid + square_object_size * secrets.SystemRandom().uniform(.4, .6))
+                y_top = int(bbox_y_mid - square_object_size * secrets.SystemRandom().uniform(.4, .6))
+                y_bottom = int(bbox_y_mid + square_object_size * secrets.SystemRandom().uniform(.4, .6))
 
                 # If the crop position is out of the image, fix it with padding
                 pad_x_left = 0
@@ -254,7 +254,7 @@ class RandomFlip(object):
         assert (isinstance(rendering_images, np.ndarray))
 
         for img_idx, img in enumerate(rendering_images):
-            if random.randint(0, 1):
+            if secrets.SystemRandom().randint(0, 1):
                 rendering_images[img_idx] = np.fliplr(img)
 
         return rendering_images
@@ -436,7 +436,7 @@ class RandomBackground(object):
 
         random_bg = None
         if len(self.random_bg_files) > 0:
-            random_bg_file_path = random.choice(self.random_bg_files)
+            random_bg_file_path = secrets.choice(self.random_bg_files)
             random_bg = cv2.imread(random_bg_file_path).astype(np.float32) / 255.
 
         # Apply random background
@@ -444,7 +444,7 @@ class RandomBackground(object):
         for img_idx, img in enumerate(rendering_images):
             alpha = (np.expand_dims(img[:, :, 3], axis=2) == 0).astype(np.float32)
             img = img[:, :, :3]
-            bg_color = random_bg if random.randint(0, 1) and random_bg is not None else np.array([[[r, g, b]]])
+            bg_color = random_bg if secrets.SystemRandom().randint(0, 1) and random_bg is not None else np.array([[[r, g, b]]])
             img = alpha * bg_color + (1 - alpha) * img
 
             processed_images = np.append(processed_images, [img], axis=0)
